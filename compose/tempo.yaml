@@ -3,6 +3,7 @@ server:
   http_listen_port: 3200
 
 distributor:
+  log_received_traces: true
   receivers:
     otlp:
       protocols:

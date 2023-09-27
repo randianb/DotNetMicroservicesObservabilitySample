@@ -115,12 +115,13 @@ services:
     # to passe one flag, such as "--log.level=debug" or "--web.enable-remote-write-receiver", we need to override the whole command, as we can't just pass one extra argument
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
+      # - "--web.enable-remote-write-receiver"
+      - "--enable-feature=remote-write-receiver"
       - "--storage.tsdb.path=/prometheus"
       - "--web.console.libraries=/usr/share/prometheus/console_libraries"
       - "--web.console.templates=/usr/share/prometheus/consoles"
       # need this for the OpenTelemetry collector to be able to put metrics into Prometheus
-      - "--web.enable-remote-write-receiver"
-    #   - "--log.level=debug"
+      #   - "--log.level=debug"
 
   grafana:
     image: "grafana/grafana"
@@ -164,7 +165,7 @@ services:
   otel-collector:
     # using contrib so it includes the loki exporter and service graph exporter
     #image: otel/opentelemetry-collector
-    image: otel/opentelemetry-collector-contrib
+    image: otel/opentelemetry-collector-contrib:0.82.0
     hostname: otel-collector
     container_name: otel-collector
     command: --config=/etc/otel-collector-config.yaml

@@ -18,17 +18,28 @@ exporters:
   prometheusremotewrite:
     endpoint: http://prometheus:9090/api/v1/write
 
+processors:
+  batch:
+  attributes/loki:
+    actions:
+      - action: insert
+        key: loki.attribute.labels
+        value: RequestPath, dotnet.ilogger.category
+
 service:
   pipelines:
     traces:
       receivers: [otlp]
+      #      processors: [batch]
       exporters: [otlp/tempo-traces]
     logs:
       receivers: [otlp]
       #processors: [attributes]
+      processors: [batch, attributes/loki]
       exporters: [loki]
     metrics:
       receivers: [otlp]
+      processors: [batch]
       exporters: [prometheusremotewrite]
 # if we want to see more detailed logs, this is the way
 #  telemetry:
